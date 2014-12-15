@@ -1,0 +1,54 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript">
+		function Start()
+		{
+			var stage = new Stage("c");
+			var video = new IVideo("big-buck-bunny_trailer.ogg");
+			video.scaleX = video.scaleY = stage.stageWidth / 720;
+			stage.addChild(video);
+		}
+		
+		function IVideo(url)	//  Our own class for video
+		{
+			Sprite.call(this);	// extends Sprite
+			
+			this.bd = null;		// BitmapData for video content
+			
+			// hidden canvas
+			this.canvas  = document.createElement("canvas");
+			this.context = this.canvas.getContext("2d");
+			
+			this.video = document.createElement("video");
+			this.video.src = url;
+			this.video.addEventListener("canplay", this.canPlay.bind(this), true);
+		}
+		IVideo.prototype = new Sprite();
+		IVideo.prototype.canPlay = function(e)
+		{
+			var w = this.video.videoWidth, h = this.video.videoHeight;
+			this.canvas.width = w;  this.canvas.height = h;
+			this.bd = BitmapData.empty(w,h);
+			this.addChild(new Bitmap(this.bd));
+			
+			this.video.play();
+			this.addEventListener(Event.ENTER_FRAME, this.onEF.bind(this));
+		}
+		IVideo.prototype.onEF = function(e)
+		{			
+			var w = this.video.videoWidth, h = this.video.videoHeight;
+			//  draw video into hidden canvas
+			this.context.drawImage(this.video, 0, 0, w, h);
+			//  get pixels from hidden canvas
+			var pixels = this.context.getImageData(0, 0, w, h).data;
+			//  put pixels into BitmapData
+			this.bd.setPixels(this.bd.rect, pixels);
+			
+			//  this process takes a lot of CPU time and generates a lot of garbage,
+			//  but currently there is no better way to get raw pixels from video
+		}
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

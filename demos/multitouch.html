@@ -1,0 +1,49 @@
+
+<html>
+<head>
+  <script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+  <script type="text/javascript">
+    var stage;
+    var balls = [];
+    
+    // Every touch has its own ID (touchPointID). 
+    // Touch may change position and event targets, but it still has the same ID.
+    
+    function Start()
+    {
+      stage = new Stage("c");
+      
+      var bd = new BitmapData("ball.png");
+      for(var i=0; i<20; i++)
+      {
+        var b = new Bitmap(bd);
+        b.x = Math.random()*stage.stageWidth;
+        b.y = Math.random()*stage.stageHeight;
+        stage.addChild(b);
+        balls.push(b);
+        b.addEventListener(TouchEvent.TOUCH_BEGIN, onTB );
+      }
+      stage.addEventListener(TouchEvent.TOUCH_MOVE, onTM );
+      stage.addEventListener(TouchEvent.TOUCH_END , onTE );
+    }
+    
+    function onTB (e){ e.target.tID = e.touchPointID; }
+    function onTE (e)
+    {
+      var b;  // get the ball with the right touch ID
+      for(var i=0; i<balls.length; i++) if(balls[i].tID == e.touchPointID) b = balls[i];  
+      if(!b) return;  
+      b.tID = -1;
+    }
+    function onTM (e)
+    {
+      var b;  // get the ball with the right touch ID
+      for(var i=0; i<balls.length; i++) if(balls[i].tID == e.touchPointID) b = balls[i];
+      if(!b) return;  
+      b.x = e.stageX - 50;
+      b.y = e.stageY - 50;
+    }
+  </script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

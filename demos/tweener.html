@@ -1,0 +1,47 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript" src="http://tweener.ivank.net/t.js"></script>
+	<script type="text/javascript">
+		/*
+			This is the demonstration of Tweener.js - http://tweener.ivank.net
+			It randomly chooses the easing function "ef" from 40 available functions.
+		*/
+		var stage;
+		var balls = [];
+		var efs = [];		// easing functions
+		
+		function Start()
+		{
+			stage = new Stage("c");
+			var bd = new BitmapData("ball.png");
+			
+			for(var i=0; i<100; i++)
+			{
+				var b = new Bitmap(bd);
+				stage.addChild(b);
+				balls.push(b);
+			}
+			
+			for(var f in Tweener.easingFunctions) efs.push(f);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMD);
+			onMD();
+		}
+		
+		function onMD(e)
+		{
+			var sw = stage.stageWidth-100;
+			var sh = stage.stageHeight-100;
+			var r = Math.random;
+			var ef = efs[Math.floor(r()*40)];
+			
+			//  We can tween position, scale, rotation, alpha 
+			//  or any other numerical property of any JS object.
+			for(var i=0; i<balls.length; i++)
+				Tweener.addTween(balls[i], {x:r()*sw, y:r()*sh, transition:ef, time:1});
+		}
+
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

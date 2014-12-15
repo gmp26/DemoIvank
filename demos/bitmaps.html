@@ -1,0 +1,24 @@
+<html>
+<head>
+  <script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+  <script type="text/javascript">
+    function Start()
+    {
+      var stage = new Stage("c");
+      
+      var bd1 = new BitmapData("ball.png");
+      
+      for(var i=0; i<30; i++)
+      {
+        var b = new Bitmap(bd1);
+        b.x = Math.random()*stage.stageWidth;
+        b.y = Math.random()*stage.stageHeight;
+        b.rotation = Math.random()*360;
+        b.scaleX = b.scaleY = 0.5 + Math.random();
+        stage.addChild(b);
+      }
+    }
+  </script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

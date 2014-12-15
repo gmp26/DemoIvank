@@ -1,0 +1,38 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript" src="Button.js"></script>
+	<script type="text/javascript">
+
+		function Start()
+		{
+			var s = new Stage("c");
+			s.addChild(new Main());
+		}
+		
+		//	class Main is below
+		//	class Button is here http://lib.ivank.net/demos/Button.js
+				
+		function Main()	// Main extends Sprite
+		{
+			Sprite.call(this);
+			
+			this.graphics.beginFill(0xccff88);
+			this.graphics.drawRect(0,0,1000, 600);
+			
+			for(var i=0; i<10; i++)
+			{
+				var b = new Button("Button " + i);
+				b.x = 15 + i*80;  b.y = 15 + i*45;
+				b.addEventListener(MouseEvent.CLICK, onCL);
+				this.addChild(b);
+			}
+		}
+		Main.prototype = new Sprite();
+		
+		function onCL(e) { alert("You just clicked on " + e.target.name); }
+		
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

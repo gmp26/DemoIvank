@@ -1,0 +1,64 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript">
+		var stage, cmat = 0, mats = [
+			[	// identity
+				1,0,0,0,0,
+				0,1,0,0,0,
+				0,0,1,0,0,
+				0,0,0,1,0,
+				0,0,0,0,1
+			], 
+			[	// more contrast
+				1.5,0,0,0,0,
+				0,1.5,0,0,0,
+				0,0,1.5,0,0,
+				0,0,0,1,0,
+				-0.16,-0.16,-0.16,0,1
+			],
+			[	// grayscale
+				.3,.3,.3, 0, 0,
+				.6,.6,.6, 0, 0,
+				.1,.1,.1, 0, 0,
+				 0, 0, 0, 1, 0,
+				 0, 0, 0, 0, 1
+			],	
+			[	// sepia
+				.393,.349,.272,0,0,
+				.769,.686,.534,0,0,
+				.189,.168,.131,0,0,
+				0,0,0,1,0,
+				0,0,0,0,1
+			],
+			[	// swap colors
+				0,0,1,0,0,
+				1,0,0,0,0,
+				0,1,0,0,0,
+				0,0,0,1,0,
+				0,0,0,0,1
+			],
+			[	// invert colors
+				-1, 0, 0, 0, 0,
+				 0,-1, 0, 0, 0,
+				 0, 0,-1, 0, 0,
+				 0, 0, 0, 1, 0,
+				 1, 1, 1, 0, 1
+			]
+		];
+		
+		function Start()
+		{
+			stage = new Stage("c");
+			stage.addChild(new Bitmap(new BitmapData("winter.jpg")));
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, onMD);
+		}
+		function onMD(e)
+		{
+			cmat = (cmat + 1)%mats.length;
+			stage.transform.colorTransform = mats[cmat];
+		}
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

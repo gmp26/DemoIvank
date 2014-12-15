@@ -1,0 +1,71 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript">
+		var stage, s, dragged;
+		var q1, q2, q3;         // anchors for Quadratic Bézier
+		var c1, c2, c3, c4;     // anchors for Cubic Bézier
+		
+		function Start()
+		{
+			stage = new Stage("c");
+			s = new Sprite();
+			stage.addChild(s);
+			
+			q1 = new Dot();  q2 = new Dot();  q3 = new Dot();
+			c1 = new Dot();  c2 = new Dot();  c3 = new Dot();  c4 = new Dot();
+			var ds = [q1, q2, q3, c1, c2, c3, c4];
+			for(var i=0; i<ds.length; i++)
+			{
+				ds[i].x = 50+i*120;  ds[i].y = 200-100*Math.sin(i*1.7);
+				ds[i].addEventListener(MouseEvent.MOUSE_DOWN, onMD);
+				s.addChild(ds[i]);
+			}
+			stage.addEventListener(MouseEvent.MOUSE_MOVE, onMM);
+			stage.addEventListener(MouseEvent.MOUSE_UP, onMU);
+			redraw();
+		}
+		
+		function onMD(e){dragged = e.target;}
+		function onMU(e){dragged = null;    }
+		function onMM(e)
+		{
+			if(dragged == null) return;
+			dragged.x = stage.mouseX;  dragged.y = stage.mouseY;
+			redraw();
+		}
+		
+		function redraw()
+		{
+			with(s.graphics)
+			{
+				clear();
+				lineStyle(2, 0x999999);    //  two "skeletons"
+				moveTo(q1.x, q1.y);
+				lineTo(q2.x, q2.y);  lineTo(q3.x, q3.y);
+				moveTo(c1.x, c1.y);
+				lineTo(c2.x, c2.y);  lineTo(c3.x, c3.y);  lineTo(c4.x, c4.y);
+				
+				lineStyle(7, 0xff9900);    //  two curves
+				moveTo(q1.x, q1.y);
+				curveTo(q2.x, q2.y, q3.x, q3.y);
+				lineStyle(7, 0x00aaff);
+				moveTo(c1.x, c1.y);
+				cubicCurveTo(c2.x, c2.y, c3.x, c3.y, c4.x, c4.y);
+			}
+		}
+		
+		function Dot()
+		{
+			Sprite.call(this);  // inherits from Sprite
+			this.graphics.beginFill(0x000000, 0.15);
+			this.graphics.drawCircle(0,0,13);
+			this.graphics.beginFill(0x999999, 1.0);
+			this.graphics.drawCircle(0,0, 6);	
+			this.buttonMode = true;
+		}
+		Dot.prototype = new Sprite();	
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>

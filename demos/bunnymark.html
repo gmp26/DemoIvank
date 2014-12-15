@@ -1,0 +1,86 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://lib.ivank.net/ivank.js"></script>
+	<script type="text/javascript">
+		var stage;
+		var gravity = 2;
+		var bunnies = [];
+		var minX = 0, maxX = 640;
+		var minY = 0, maxY = 480;
+		var bunnyBD;
+		var adding = false;
+		var tf;
+		var fps = 60, time = new Date().getTime();;
+	
+		function Start()
+		{
+			stage = new Stage("c");
+			stage.mouseEnabled = stage.mouseChildren = false;
+			
+			maxX = stage.stageWidth -26;
+			maxY = stage.stageHeight-37;
+			
+			tf = new TextField();  tf.x = tf.y = 10;  stage.addChild(tf);
+			bunnyBD = new BitmapData("wabbit_alpha.png");
+			addBunnies(100);
+			
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, function(e){ adding = true;  });
+			stage.addEventListener(MouseEvent.MOUSE_UP  , function(e){ adding = false; });
+			stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+		}
+		
+		function addBunnies(n)
+		{
+			for (var i=0; i<n; i++)
+			{
+				var bunny = new Bitmap(bunnyBD);
+				bunny.speedX = Math.random() * 10;
+				bunny.speedY = Math.random() * 10 - 5;
+				stage.addChild(bunny);
+				bunnies.push(bunny);
+			}
+		}
+		
+		function onEnterFrame(event)
+		{
+			if(adding) addBunnies(10);
+			
+			var ntime = new Date().getTime();
+			fps = 0.97*fps + 0.03*1000/(ntime-time);  time = ntime;
+			tf.text = bunnies.length + " bunnies\nFPS: " + Math.round(fps);
+			
+			for (var i=0; i<bunnies.length; i++)
+			{
+				var bunny = bunnies[i];
+				bunny.x += bunny.speedX;
+				bunny.y += bunny.speedY;
+				bunny.speedY += gravity;
+				
+				if (bunny.x > maxX)
+				{
+					bunny.speedX *= -1;
+					bunny.x = maxX;
+				}
+				else if (bunny.x < minX)
+				{
+					bunny.speedX *= -1;
+					bunny.x = minX;
+				}
+				
+				if (bunny.y > maxY)
+				{
+					bunny.speedY *= -0.8;
+					bunny.y = maxY;
+					if (Math.random() > 0.5) bunny.speedY -= Math.random() * 12;
+				} 
+				else if (bunny.y < minY)
+				{
+					bunny.speedY = 0;
+					bunny.y = minY;
+				}
+			}
+		}
+	</script>
+</head>
+<body onload="Start();"><canvas id="c"></canvas></body>
+</html>
