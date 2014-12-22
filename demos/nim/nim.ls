@@ -61,7 +61,7 @@ startNim = (stageId) !->
     r = rand01!
     [0 to (cfg.maxRows-1)]
       .filter ((row) -> r >= row / cfg.maxRows)
-      .map ((row) ->
+      .map (row) ->
         coin = coinsInColumn[row]
         console.log "adding coin at (#col,#row)"
         stage.addChild coin
@@ -69,8 +69,8 @@ startNim = (stageId) !->
         # A reset button should remove any old event listeners to avoid a memory
         # leak. Doesn't really matter in a short-lived app like this though.
         # Page refresh blows the whole thing away anyway.
-        coin.addEventListener MouseEvent.MOUSE_DOWN, ((event) -> event.target.visible = false)
-      )
+        coin.addEventListener MouseEvent.MOUSE_DOWN, (event) -> 
+          event.target.visible = false
 
   # draw everything
   draw = !->
